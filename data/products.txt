@@ -1,0 +1,13 @@
+P|Food|Milk|Pure|10|9869|Admin|Food-0
+P|Food|Bread|Black|5|9939|Admin|Food-1
+P|Food|Hamburger|M|30|9939|Admin|Food-2
+P|Clothes|Jacket|Nice|2599|30|Admin|Clothes-0
+P|Clothes|T-shirt|Loewe|1299|60|Admin|Clothes-1
+P|Clothes|Hat|Brilliant|12000|1|Admin|Clothes-2
+P|Book|C++Primer|start|30|170|Admin|Book-0
+P|Book|EffectiveC++|More|45|200|Admin|Book-1
+P|Book|TheBookOfShadow|You|79|1|Admin|Book-2
+P|Book|Python|C++|30|99|Admin|Book-3
+P|Food|Cola|00|10|9919|Beta|Food-3
+P|Book|Goodnight|GSW|30|99|Admin|Book-11
+P|Book|Bible|TheBook|90|30|Admin|Book-12

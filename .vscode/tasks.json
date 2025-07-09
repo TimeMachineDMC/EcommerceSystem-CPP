@@ -1,0 +1,63 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Build Server",
+      "type": "shell",
+      "command": "g++",
+      "args": [
+        "-std=c++20",
+        "-g",
+        "-Iinclude",
+        "-Ithird_party",
+        "src/network/SocketStream.cpp",
+        "src/server/Main.cpp",
+        "src/manager/ProductManager.cpp",
+        "src/manager/OrderManager.cpp",
+        "src/manager/UserManager.cpp",
+        "src/cart/CartItem.cpp",
+        "src/cart/ShoppingCart.cpp",
+        "src/product/Product.cpp",
+        "src/product/Book.cpp",
+        "src/product/Clothes.cpp",
+        "src/product/Food.cpp",
+        "src/order/Order.cpp",
+        "src/user/Customer.cpp",
+        "src/user/Seller.cpp",
+        "src/user/User.cpp",
+        "src/common/Utils.cpp",
+        "-lws2_32",
+        "-pthread",
+        "-o",
+        "ecommerce_server.exe"
+      ],
+      "group": "build",
+      "problemMatcher": [
+        "$gcc"
+      ]
+    },
+    {
+      "label": "Build Client",
+      "type": "shell",
+      "command": "g++",
+      "args": [
+        "-std=c++20",
+        "-g",
+        "-Iinclude",
+        "-Ithird_party",
+        "src/network/SocketStream.cpp",
+        "src/client/Main.cpp",
+        "-lws2_32",
+        "-o",
+        "ecommerce_client.exe"
+      ],
+      "problemMatcher": [
+        "$gcc"
+      ],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      }
+    }
+  ]
+}

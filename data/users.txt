@@ -1,0 +1,6 @@
+Admin admin 5290 Seller
+Beta beta 810 Seller
+Coco coco 1661 Customer
+Didi didi 0 Customer
+Zebra zebra 0 Seller
+xyy xyy 0 Customer
