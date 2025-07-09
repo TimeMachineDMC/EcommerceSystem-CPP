@@ -6,7 +6,6 @@
 #include <filesystem>
 #include <stdexcept>
 
-/* ----------- 工具：字符串切割 ----------- */
 namespace {
 std::vector<std::string> Split(const std::string& s,char delim='|')
 {
@@ -16,13 +15,11 @@ std::vector<std::string> Split(const std::string& s,char delim='|')
     while(std::getline(ss,item,delim)) out.push_back(item);
     return out;
 }
-} // namespace
+} 
 
-/* ----------- ctor ----------- */
 ProductManager::ProductManager(const std::string& path)
     : product_file(path) {}
 
-/* ----------- 基本查询 ----------- */
 void ProductManager::AddProduct(std::shared_ptr<Product> p){ products.push_back(std::move(p)); }
 
 const std::vector<std::shared_ptr<Product>>&
@@ -46,7 +43,6 @@ ProductManager::GetProductsBySeller(const std::string& seller) const
     return res;
 }
 
-/* ----------- 折扣 ----------- */
 void ProductManager::ApplyDiscount(const std::string& cat,double r){ discount_map[cat]=r; }
 void ProductManager::CancelDiscount(const std::string& cat){ discount_map.erase(cat); }
 bool  ProductManager::HasDiscount(const std::string& cat) const{ return discount_map.count(cat); }
@@ -57,7 +53,6 @@ double ProductManager::GetDisplayPrice(const std::shared_ptr<Product>& p) const{
     return p->GetRawPrice()*GetDiscountRate(p->GetCategory());
 }
 
-/* ----------- Save ----------- */
 void ProductManager::SaveToFile() const
 {
     if(auto parent=std::filesystem::path(product_file).parent_path(); !parent.empty())
@@ -66,11 +61,9 @@ void ProductManager::SaveToFile() const
     std::ofstream fout(product_file,std::ios::trunc);
     if(!fout) throw std::runtime_error("Open "+product_file+" fail");
 
-    /* 折扣行：D|category|rate */
     for(auto&[cat,r]:discount_map)
         fout<<"D|"<<cat<<'|'<<r<<'\n';
 
-    /* 商品行：P|Cat|Name|Desc|Price|Stock|Owner|Id */
     for(auto&p:products)
         fout<<"P|"<<p->GetCategory()<<'|'
             <<p->GetName()       <<'|'
@@ -81,7 +74,6 @@ void ProductManager::SaveToFile() const
             <<p->GetId()         <<'\n';
 }
 
-/* ----------- Load ----------- */
 void ProductManager::LoadFromFile()
 {
     products.clear(); discount_map.clear();
@@ -127,8 +119,6 @@ void ProductManager::LoadFromFile()
     }
 }
 
-
-/* ----------- helpers ----------- */
 std::shared_ptr<Product> ProductManager::GetProductById(const std::string& id) const{
     for(auto& p:products) if(p->GetId()==id) return p; return nullptr;
 }

@@ -7,13 +7,11 @@
 #include "../../third_party/json.hpp"
 using json = nlohmann::json;
 
-/* ---------- Check if user is already logged in ---------- */
 bool IsUserLoggedIn(const std::string& username) {
     std::filesystem::path lock_file = "data/sessions/" + username + ".lock";
     return std::filesystem::exists(lock_file);
 }
 
-/* ---------- Create lock file for user ---------- */
 void LockUserSession(const std::string& username) {
     std::filesystem::create_directories("data/sessions");
     std::ofstream lock_file("data/sessions/" + username + ".lock");
@@ -23,12 +21,10 @@ void LockUserSession(const std::string& username) {
     }
 }
 
-/* ---------- Remove lock file for user ---------- */
 void UnlockUserSession(const std::string& username) {
     std::filesystem::remove("data/sessions/" + username + ".lock");
 }
 
-/* ---------------- 工具函数 ---------------- */
 static std::string inl(){ std::string s; std::getline(std::cin,s); return s; }
 static void showP(const json& a){
     for(auto&p:a)
@@ -49,7 +45,6 @@ static uint16_t read_port(int argc,char*argv[]){
     }
 }
 
-/* ============================================================= */
 int main(int argc,char*argv[])
 {
     if(argc<2){ std::cout<<"Usage: client <ip> [port]\n"; return 0; }
@@ -57,7 +52,6 @@ int main(int argc,char*argv[])
     SocketStream ss{argv[1], port};
     std::cout<<"Connected to "<<argv[1]<<':'<<port<<'\n';
 
-    /* ============ 未登录菜单 ============ */
     while(true){
         std::cout<<"\n1. Register  2. Login  3. List all products  0. Exit\n> ";
         std::string ch=inl();
@@ -80,12 +74,10 @@ int main(int argc,char*argv[])
         }
         if(ch!="2"){ std::cout<<"Invalid.\n"; continue;}
 
-        /* ============ 登录流程 ============ */
         std::string u,p;
         std::cout<<"username: "; u=inl();
         std::cout<<"password: "; p=inl();
 
-        // 检查用户是否已登录
         if (IsUserLoggedIn(u)) {
             std::cout << "Login failed: User is already logged in elsewhere.\n";
             continue;
@@ -98,13 +90,11 @@ int main(int argc,char*argv[])
         std::string role=log["data"]["userType"];
         std::cout<<"Login successful. Welcome, "<<role<<' '<<u<<".\n";
 
-         // 登录成功后锁定用户
         LockUserSession(u);
 
         ss.SendLine(R"({"type":"List","data":{}})");
         showP(json::parse(ss.RecvLine())["data"]);
 
-        /* ============ 已登录菜单 ============ */
         while(true){
             std::cout<<"\n--- Menu ---\n"
                      <<"1. View balance\n2. Recharge\n3. List all products\n"
@@ -118,7 +108,6 @@ int main(int argc,char*argv[])
                      <<"13. Logout\n> ";
             std::string c=inl();
 
-            /* ---------- Balance / Recharge ---------- */
             if(c=="1"){
                 ss.SendLine(R"({"type":"Balance","data":{}})");
                 std::cout<<"Balance: $"<<json::parse(ss.RecvLine())["data"]<<'\n';
@@ -132,7 +121,6 @@ int main(int argc,char*argv[])
                 }catch(...){ std::cout<<"Invalid amount\n"; }
             }
 
-            /* ---------- List / Search ---------- */
             else if(c=="3"){ ss.SendLine(R"({"type":"List","data":{}})"); showP(json::parse(ss.RecvLine())["data"]); }
             else if(c=="4"){
                 std::cout<<"Keyword: "; std::string k=inl();
@@ -140,23 +128,18 @@ int main(int argc,char*argv[])
                 showP(json::parse(ss.RecvLine())["data"]);
             }
 
-            /* ---------- Seller ---------- */
             else if(c=="5" && role=="Seller"){
                 json d;
                 
-                // 获取商品分类
                 std::cout << "Category(Book/Food/Clothes): "; 
                 d["category"] = inl();
 
-                // 获取商品名称
                 std::cout << "Name: "; 
                 d["name"] = inl();
 
-                // 获取商品描述
                 std::cout << "Description: "; 
                 d["desc"] = inl();
 
-                // 获取商品价格并检查是否为负数
                 double price = 0;
                 while (true) {
                     std::cout << "Price: "; 
@@ -173,7 +156,6 @@ int main(int argc,char*argv[])
                 }
                 d["price"] = price;
 
-                // 获取商品库存并检查是否为负数
                 int stock = 0;
                 while (true) {
                     std::cout << "Stock: "; 
@@ -190,10 +172,8 @@ int main(int argc,char*argv[])
                 }
                 d["stock"] = stock;
 
-                // 发送添加商品请求到服务器
                 ss.SendLine(json{{"type", "AddProduct"}, {"data", d}}.dump());
 
-                // 处理服务器返回的结果
                 std::cout << (json::parse(ss.RecvLine())["ok"] ? "Added\n" : "Fail\n");
             }
 
@@ -216,7 +196,6 @@ int main(int argc,char*argv[])
                 std::cout<<(json::parse(ss.RecvLine())["ok"]?"Applied\n":"Fail\n");
             }
 
-            /* ---------- Change password ---------- */
             else if(c=="6"){
                 std::string o,n; std::cout<<"Old pwd: "; o=inl(); std::cout<<"New pwd: "; n=inl();
                 ss.SendLine(json{{"type","ChangePassword"},
@@ -224,7 +203,6 @@ int main(int argc,char*argv[])
                 std::cout<<(json::parse(ss.RecvLine())["ok"]?"Changed\n":"Fail\n");
             }
 
-            /* ---------- Customer 购物车子菜单 ---------- */
             else if(c=="9" && role=="Customer"){
                 ss.SendLine(R"({"type":"CartList","data":{}})"); 
                 auto cart0=json::parse(ss.RecvLine())["data"];   
@@ -241,7 +219,7 @@ int main(int argc,char*argv[])
                     std::string op=inl();
                     if(op=="done") break;
 
-                    bool action = false; // 是否执行了操作
+                    bool action = false; 
 
                     if(op=="add"){
                         std::cout<<"\n--- Available Products ---\n";
@@ -296,17 +274,15 @@ int main(int argc,char*argv[])
                 }
             }
 
-            /* ---------- Pay (Customer) ---------- */
             else if(c=="10" && role=="Customer"){
                 // 先拉取自己的订单
                 ss.SendLine(R"({"type":"OrderList","data":{}})");
                 auto list=json::parse(ss.RecvLine())["data"];
 
-                /* 过滤未付款 */
                 json unpaid=json::array();
                 for(auto&o:list) if(o["status"]=="Unpaid") unpaid.push_back(o);
 
-                if(unpaid.empty()){                                     // --- MOD
+                if(unpaid.empty()){                                     
                     std::cout<<"No unpaid orders.\n";
                     continue;
                 }
@@ -320,7 +296,6 @@ int main(int argc,char*argv[])
                 std::cout<<"Pay all above orders? (y/n) ";
                 if(inl()!="y"){ std::cout<<"Payment canceled.\n"; continue; }
 
-                /* 真正支付 */
                 ss.SendLine(R"({"type":"Pay","data":{}})");
                 auto r=json::parse(ss.RecvLine());
                 if(r["ok"])
@@ -329,9 +304,6 @@ int main(int argc,char*argv[])
                     std::cout<<"Payment failed: "<<r["msg"]<<'\n';
             }
 
-
-
-            /* ---------- OrderList ---------- */
             else if(c=="11"){
                 ss.SendLine(R"({"type":"OrderList","data":{}})");
                 auto list = json::parse(ss.RecvLine())["data"];
@@ -345,8 +317,6 @@ int main(int argc,char*argv[])
                 }
             }
 
-
-            /* ---------- Logout ---------- */
             else if(c=="13"){
                 ss.SendLine(R"({"type":"Logout","data":{}})");
                 ss.RecvLine();        
@@ -359,7 +329,6 @@ int main(int argc,char*argv[])
                 std::string order_id;
                 std::cin >> order_id;
 
-                // 发送取消未支付订单请求
                 ss.SendLine(json{{"type", "CancelUnpaidOrder"}, {"data", {{"orderId", order_id}}}}.dump());
                 auto res = json::parse(ss.RecvLine());
                 

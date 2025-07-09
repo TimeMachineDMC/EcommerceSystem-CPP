@@ -8,7 +8,6 @@
 #include "product/Food.h"
 #include "product/Clothes.h"
 
-// 商品管理：增删查、折扣、持久化
 class ProductManager {
 private:
     std::vector<std::shared_ptr<Product>> products;
@@ -24,18 +23,15 @@ public:
     std::vector<std::shared_ptr<Product>> SearchByName(const std::string& keyword) const;
     std::vector<std::shared_ptr<Product>> GetProductsBySeller(const std::string& seller) const;
 
-    /* 折扣 */
     void ApplyDiscount(const std::string& category,double rate);
     void CancelDiscount(const std::string& category);
     bool  HasDiscount(const std::string& category) const;
     double GetDiscountRate(const std::string& category) const;
     double GetDisplayPrice(const std::shared_ptr<Product>& p) const;
 
-    /* 持久化 */
     void LoadFromFile();
     void SaveToFile() const;
 
-    /* 查找 */
     std::shared_ptr<Product> GetProductById(const std::string& id) const;
     std::shared_ptr<Product> GetProductByName(const std::string& name) const;
 };

@@ -1,13 +1,11 @@
 #include "product/Product.h"
 
-/* ctor */
 Product::Product(const std::string& name,
                  const std::string& description,
                  double price,
                  int stock)
     : name(name), description(description), price(price), stock(stock) {}
 
-/* setter / getter 基本实现 */
 void Product::SetId(const std::string& id_) { id = id_; }
 std::string Product::GetId()   const { return id; }
 std::string Product::GetName() const { return name; }
@@ -25,7 +23,7 @@ void Product::SetPrice(double v){ if(v>=0) price = v; }
 void Product::SetOwner(const std::string& o){ owner_name = o; }
 std::string Product::GetOwner() const { return owner_name; }
 
-/* 冻结逻辑 */
+/* 冻结 */
 void Product::FreezeStock(int q){
     if(q>=0 && q<=GetAvailableStock()) frozen_stock += q;
 }

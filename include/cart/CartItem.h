@@ -2,7 +2,6 @@
 #include <memory>
 #include "product/Product.h"
 
-// 购物车中的一项
 class CartItem {
 private:
     std::shared_ptr<Product> product;
@@ -15,5 +14,5 @@ public:
     int    GetQuantity() const;
     void   SetQuantity(int quantity);
 
-    double GetTotalPrice() const;                 // 原价 × 数量
+    double GetTotalPrice() const;                 // 原价 * 数量
 };

@@ -1,7 +1,6 @@
 #pragma once
 #include "User.h"
 
-/* 商家 */
 class Seller : public User {
 public:
     Seller(const std::string& user_name,

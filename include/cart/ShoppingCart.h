@@ -4,10 +4,9 @@
 #include "CartItem.h"
 #include <filesystem>
 
-// 简易购物车
 class ShoppingCart {
 private:
-    std::map<std::string,CartItem> items;   // key = productId
+    std::map<std::string,CartItem> items;  
 
 public:
     void AddItem(std::shared_ptr<Product> product,int quantity);
@@ -21,7 +20,7 @@ public:
     static void ClearCartFile(const std::string& username) {
         std::filesystem::path cart_file = "data/carts/" + username + ".txt";
         if (std::filesystem::exists(cart_file)) {
-            std::filesystem::remove(cart_file);  // 删除购物车文件
+            std::filesystem::remove(cart_file);  
         }
     }
 };

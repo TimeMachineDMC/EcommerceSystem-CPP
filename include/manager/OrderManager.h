@@ -5,7 +5,7 @@
 #include <unordered_map>
 #include <atomic>
 
-#include "order/Order.h"                    // --- MOD: 别忘头文件
+#include "order/Order.h"                    
 #include "cart/ShoppingCart.h"
 #include "user/Customer.h"
 #include "user/Seller.h"
@@ -24,7 +24,7 @@ public:
 
     std::string CreateOrder(Customer& user,const ShoppingCart& cart);
     bool   PayOrder(Customer& user,const std::string& order_id);
-    double PayAllUnpaid(Customer& user);            // --- MOD: 已修复卖家收款
+    double PayAllUnpaid(Customer& user);          
     bool   CancelUnpaidOrder(Customer& user,const std::string& order_id);
 
     const std::vector<Order>& GetAllOrders() const;
@@ -32,10 +32,9 @@ public:
     void SaveToFile(const std::string& path) const;
     void LoadFromFile(const std::string& path,const ProductManager& pm);
 
-    /* 购物车持久化（简单文本） */
+    /* 购物车持久化 */
     static void SaveCartToFile(const std::string& user, const ShoppingCart&);
-    // --- FIX ↓ 额外把 ProductManager 传进来
     static void LoadCartFromFile(const std::string& user,
-                                 ProductManager& pm,           // <-- 新参数
-                                 ShoppingCart& out);           // <--
+                                 ProductManager& pm,         
+                                 ShoppingCart& out);         
 };

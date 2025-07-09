@@ -11,7 +11,6 @@ static void throw_on(bool cond, const char* msg)
     if (cond) throw std::runtime_error(msg);
 }
 
-// ---------- Windows 专用 ----------
 void SocketStream::InitWSA()
 {
 #ifdef _WIN32
@@ -23,7 +22,6 @@ void SocketStream::InitWSA()
 #endif
 }
 
-// ---------- ctor / dtor ----------
 SocketStream::SocketStream(const std::string& ip, uint16_t port)
 {
     InitWSA();
@@ -50,7 +48,6 @@ SocketStream::~SocketStream()
 #endif
 }
 
-// ---------- send / recv ----------
 void SocketStream::SendLine(const std::string& line) const
 {
     std::string buf = line + "\n";
@@ -70,7 +67,7 @@ std::string SocketStream::RecvLine() const
     char ch;
     while (true) {
         int n = ::recv(sock_, &ch, 1, 0);
-        if (n <= 0) return {};           // 对端关闭或出错
+        if (n <= 0) return {};           
         if (ch == '\n') break;
         line.push_back(ch);
     }

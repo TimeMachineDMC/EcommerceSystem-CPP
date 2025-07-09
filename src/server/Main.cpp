@@ -27,8 +27,8 @@ static void Handle(socket_t s,
 {
     try {
         SocketStream ss{s};
-        std::shared_ptr<User> cur;         // 当前登录用户
-        ShoppingCart          cart;        // 会话购物车
+        std::shared_ptr<User> cur;         
+        ShoppingCart          cart;        
 
         auto ok  =[&](const json& d){ ss.SendLine(json{{"ok",true},{"data",d}}.dump()); };
         auto ok0 =[&]{ ss.SendLine(R"({"ok":true})"); };
@@ -53,7 +53,7 @@ static void Handle(socket_t s,
                 const auto& d = req["data"];
                 cur = um.Login(d["username"], d["password"]);
                 if (!cur) { err("Invalid credential"); continue; }
-                OrderManager::LoadCartFromFile(                       // --- FIX ①
+                OrderManager::LoadCartFromFile(                       
                 cur->GetUsername(), pm, cart); 
                 ok({{"userType", cur->GetUserType()}});
             }
@@ -244,7 +244,7 @@ static void Handle(socket_t s,
 
             /* ---------- Logout ---------- */
             else if (tp == "Logout") {
-                if(cur) OrderManager::SaveCartToFile(cur->GetUsername(), cart); // --- MOD
+                if(cur) OrderManager::SaveCartToFile(cur->GetUsername(), cart); 
                 cur.reset(); cart.Clear(); ok0();
             }
 

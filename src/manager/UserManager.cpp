@@ -3,10 +3,8 @@
 #include <sstream>
 #include <iostream>
 
-/* ctor */
 UserManager::UserManager(const std::string& fp) : user_file(fp) {}
 
-/* 注册 */
 bool UserManager::RegisterUser(const std::string& name,
                                const std::string& pwd,
                                const std::string& type)
@@ -21,12 +19,10 @@ bool UserManager::RegisterUser(const std::string& name,
         users.emplace_back(std::make_shared<Seller>(name,pwd));
     else return false;
 
-    SaveToFile();   // ← 新增：注册成功立即保存
+    SaveToFile();  
     return true;
 }
 
-
-/* 登录 */
 std::shared_ptr<User> UserManager::Login(const std::string& name,
                                          const std::string& pwd) const
 {
@@ -37,7 +33,6 @@ std::shared_ptr<User> UserManager::Login(const std::string& name,
     return nullptr;
 }
 
-/* 加载 */
 void UserManager::LoadFromFile()
 {
     std::lock_guard<std::mutex> lock(mtx);
@@ -76,12 +71,9 @@ void UserManager::SaveToFile() const
             <<u->GetUserType()<<'\n';
 }
 
-
-/* 只读访问 */
 const std::vector<std::shared_ptr<User>>&
 UserManager::GetAllUsers() const { return users; }
 
-/* 按名查找 */
 std::shared_ptr<User> UserManager::FindByUsername(const std::string& name) const
 {
     std::lock_guard<std::mutex> lock(mtx);

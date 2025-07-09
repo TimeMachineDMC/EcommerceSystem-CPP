@@ -13,7 +13,7 @@
 #include <windows.h>
 #endif
 
-/* ──────── 工具函数 ──────── */
+/* 工具函数 */
 void ShowProduct(const std::shared_ptr<Product>& p, const ProductManager& pm)
 {
     double price = pm.GetDisplayPrice(p);
@@ -39,7 +39,6 @@ bool ReadInput(std::string& result)
     return true;
 }
 
-/* ──────── 主函数 ──────── */
 int main()
 {
 #ifdef _WIN32
@@ -62,7 +61,7 @@ int main()
 
     while (true) {
 
-        /* ───────── 未登录 ───────── */
+        /* 未登录  */
         if (!current_user) {
             std::cout << "\n1. Register  2. Login  3. List all products  0. Exit\n> ";
             std::cin  >> choice;
@@ -100,7 +99,7 @@ int main()
                         ShowProduct(p, product_manager);
                 } else std::cout << "Login failed.\n";
 
-            /* 3. List all products（新增功能） */
+            /* 3. List all products */
             } else if (choice == "3") {
                 if (product_manager.GetAllProducts().empty()) {
                     std::cout << "No products available.\n";
@@ -117,7 +116,7 @@ int main()
                 std::cout << "Invalid choice.\n";
             }
 
-        /* ───────── 已登录 ───────── */
+        /* 已登录 */
         } else {
             std::cout << "\n--- Menu ---\n"
                     << "1. View balance\n2. Recharge\n3. List all products\n"
